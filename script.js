@@ -28,9 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const photoReader = new FileReader();
-        const signatureReader = new FileReader();
-
         const loadImage = (file) => {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -56,14 +53,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Draw photo
             ctx.drawImage(photoImg, 0, 0);
 
-            // Calculate signature position (example: bottom center)
-            const signatureWidth = photoImg.width * 0.4; // Example: 40% of photo width
-            const signatureHeight = signatureImg.height * (signatureWidth / signatureImg.width);
-            const signatureX = (photoImg.width - signatureWidth) / 2;
-            const signatureY = photoImg.height - signatureHeight - (photoImg.height * 0.05); // 5% padding from bottom
+            // ************ SIGNATURE POSITIONING LOGIC CHANGES START ************
+            // Signature ki desired width, jo photo ki width ke barabar hogi
+            const desiredSignatureWidth = photoImg.width;
 
-            // Draw signature
-            ctx.drawImage(signatureImg, signatureX, signatureY, signatureWidth, signatureHeight);
+            // Signature ka aspect ratio maintain karte hue uski height calculate karein
+            // signatureImg.naturalWidth aur signatureImg.naturalHeight original dimensions dete hain
+            const signatureAspectRatio = signatureImg.naturalWidth / signatureImg.naturalHeight;
+            const calculatedSignatureHeight = desiredSignatureWidth / signatureAspectRatio;
+
+            // Signature ko photo ke bottom par align karein
+            // X-coordinate hamesha 0 hoga kyunki yeh photo ki poori width lega
+            const signatureX = 0;
+            // Y-coordinate bottom se calculate karein, jisse signature photo ke neeche fit ho
+            const signatureY = photoImg.height - calculatedSignatureHeight;
+
+            // Draw signature on the canvas with calculated dimensions and position
+            ctx.drawImage(signatureImg, signatureX, signatureY, desiredSignatureWidth, calculatedSignatureHeight);
+            // ************ SIGNATURE POSITIONING LOGIC CHANGES END ************
 
             // Generate new file name
             const newFileName = `${originalPhotoName}vacancyhai-online.jpg`;
