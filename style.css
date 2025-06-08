@@ -8,7 +8,6 @@
     --canvas-border-color: #000; /* Black border for the final image on canvas */
     --separator-color: #ccc; /* Lighter color for the separator line on canvas */
     --file-name-color: #555; /* Color for file name display */
-    /* NEW: Font family updated */
     --font-family: 'Arial', sans-serif; /* Changed font */
 }
 
@@ -25,8 +24,8 @@ body {
 
 main {
     flex-grow: 1;
-    /* NEW: Added padding to give 5px gap from screen borders */
-    padding: 5px; /* 5px gap from all screen edges */
+    /* Adjusted padding for responsiveness */
+    padding: 20px; /* Default for larger screens */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center items horizontally */
@@ -45,25 +44,23 @@ main {
     width: 100%;
     max-width: 500px; /* Max width for the widget */
     text-align: center; /* Center the title and elements within the widget */
-    /* NEW: Added max-height and overflow to handle large canvas */
-    max-height: calc(100vh - 10px); /* Screen height minus 5px top/bottom padding of main */
-    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
+    /* Removed max-height and overflow-y as canvas is hidden */
 }
 
 /* Style for the app title inside the widget */
 .app-title {
-    font-size: 2.2em; /* Larger, prominent title */
+    font-size: 2.2em;
     color: var(--text-color);
-    margin-bottom: 15px; /* Space below the title */
+    margin-bottom: 15px;
     padding: 0;
     font-weight: 600;
 }
 
 .file-input-group {
     display: flex;
-    flex-direction: column; /* Stack label, input, and file name vertically */
-    align-items: flex-start; /* Align contents to the left within the group */
-    gap: 5px; /* Space between elements in the group */
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
     width: 100%;
 }
 
@@ -107,14 +104,13 @@ button:hover {
     background-color: #005bb5;
 }
 
-/* Canvas styling when it's directly inside main-widget */
-canvas {
-    max-width: 100%; /* Ensure canvas scales down if larger than its container */
-    height: auto; /* Maintain aspect ratio when scaling down */
-    display: block; /* Removes any extra space below the canvas element */
-    margin-top: 15px; /* Space above the canvas, separating it from the button */
-    border: 1px solid var(--border-color); /* Added a light border to canvas container for visual separation */
-    border-radius: 5px; /* Optional: slight rounding for visual appeal */
+/* NEW: Hide the canvas element */
+.hidden-canvas {
+    display: none; /* Completely removes it from layout */
+    /* Alternatively, for some cases:
+    visibility: hidden;
+    position: absolute;
+    left: -9999px; */
 }
 
 /* Styles for the footer when inside the widget */
@@ -142,20 +138,19 @@ canvas {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     main {
-        padding: 10px; /* Adjust padding for tablets */
+        padding: 15px; /* More padding for tablets/mid-size screens */
     }
     .app-title {
         font-size: 1.8em;
     }
     .main-widget {
         padding: 15px;
-        max-height: calc(100vh - 20px); /* Adjust max-height for tablet padding */
     }
 }
 
 @media (max-width: 480px) {
     main {
-        padding: 5px; /* Keep 5px padding for mobile */
+        padding: 10px; /* 10px padding for mobile screens */
     }
     .app-title {
         font-size: 1.5em;
@@ -165,6 +160,6 @@ canvas {
         font-size: 14px;
     }
     .main-widget {
-        max-height: calc(100vh - 10px); /* Adjust max-height for mobile padding */
+        padding: 10px; /* Reduced padding for widget itself on mobile */
     }
 }
