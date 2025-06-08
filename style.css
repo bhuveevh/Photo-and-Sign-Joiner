@@ -5,13 +5,15 @@
     --text-color: #1d1d1f; /* Dark text */
     --accent-color: #007aff; /* Blue */
     --border-color: #d2d2d7; /* Light border for widgets */
-    --canvas-border-color: #000; /* Black border for the final image (NEW) */
+    --canvas-border-color: #000; /* Black border for the final image on canvas */
     --separator-color: #ccc; /* Lighter color for the separator line on canvas */
     --file-name-color: #555; /* Color for file name display */
+    /* NEW: Font family updated */
+    --font-family: 'Arial', sans-serif; /* Changed font */
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: var(--font-family); /* Applied new font */
     margin: 0;
     padding: 0;
     background-color: var(--primary-bg);
@@ -22,15 +24,16 @@ body {
 }
 
 main {
-    flex-grow: 1; /* Allows main content to take up available space */
-    padding: 20px;
+    flex-grow: 1;
+    /* NEW: Added padding to give 5px gap from screen borders */
+    padding: 5px; /* 5px gap from all screen edges */
     display: flex;
     flex-direction: column;
     align-items: center; /* Center items horizontally */
-    gap: 20px; /* Space between the main widget and the canvas container */
+    justify-content: center; /* Center items vertically if there's extra space */
 }
 
-/* Styles for the main widget containing all controls */
+/* Styles for the main widget containing all controls and now the canvas */
 .main-widget {
     background-color: var(--secondary-bg);
     padding: 20px;
@@ -42,6 +45,9 @@ main {
     width: 100%;
     max-width: 500px; /* Max width for the widget */
     text-align: center; /* Center the title and elements within the widget */
+    /* NEW: Added max-height and overflow to handle large canvas */
+    max-height: calc(100vh - 10px); /* Screen height minus 5px top/bottom padding of main */
+    overflow-y: auto; /* Enable vertical scrolling if content exceeds max-height */
 }
 
 /* Style for the app title inside the widget */
@@ -49,8 +55,8 @@ main {
     font-size: 2.2em; /* Larger, prominent title */
     color: var(--text-color);
     margin-bottom: 15px; /* Space below the title */
-    padding: 0; /* Remove any default padding that might affect alignment */
-    font-weight: 600; /* Slightly bolder */
+    padding: 0;
+    font-weight: 600;
 }
 
 .file-input-group {
@@ -63,7 +69,6 @@ main {
 
 label {
     font-weight: 600;
-    /* Removed margin-top as gap handles spacing now */
     text-align: left;
     width: 100%;
 }
@@ -73,8 +78,8 @@ input[type="file"] {
     border: 1px solid var(--border-color);
     border-radius: 5px;
     background-color: #fcfcfc;
-    width: calc(100% - 22px); /* Adjust width for padding (10px each side) and border (1px each side) */
-    box-sizing: border-box; /* Include padding and border in the element's total width and height calculation */
+    width: calc(100% - 22px);
+    box-sizing: border-box;
 }
 
 .file-name-display {
@@ -82,10 +87,8 @@ input[type="file"] {
     color: var(--file-name-color);
     text-align: left;
     width: 100%;
-    /* Add some padding/margin to distinguish it from the input */
     padding: 5px 0;
 }
-
 
 button {
     background-color: var(--accent-color);
@@ -97,43 +100,32 @@ button {
     font-size: 16px;
     font-weight: 500;
     transition: background-color 0.2s ease-in-out;
-    width: 100%; /* Make button take full width of the widget */
+    width: 100%;
 }
 
 button:hover {
-    background-color: #005bb5; /* Darker blue on hover */
+    background-color: #005bb5;
 }
 
-.canvas-container {
-    background-color: var(--secondary-bg); /* White background for the container itself */
-    border: 1px solid var(--border-color); /* Light border for the container */
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden; /* To handle larger images gracefully without container scrollbars */
-    width: 100%;
-    max-width: 800px; /* Max width for the canvas display area */
-}
-
+/* Canvas styling when it's directly inside main-widget */
 canvas {
     max-width: 100%; /* Ensure canvas scales down if larger than its container */
     height: auto; /* Maintain aspect ratio when scaling down */
     display: block; /* Removes any extra space below the canvas element */
-    /* Canvas will have its own border drawn by JavaScript, so no CSS border here */
+    margin-top: 15px; /* Space above the canvas, separating it from the button */
+    border: 1px solid var(--border-color); /* Added a light border to canvas container for visual separation */
+    border-radius: 5px; /* Optional: slight rounding for visual appeal */
 }
 
-/* New styles for the footer when inside the widget */
+/* Styles for the footer when inside the widget */
 .widget-footer {
     text-align: center;
-    padding-top: 15px; /* Add padding above the footer text */
-    margin-top: 15px; /* Space between button and footer */
-    border-top: 1px solid var(--border-color); /* Separator for footer inside widget */
+    padding-top: 15px;
+    margin-top: 15px;
+    border-top: 1px solid var(--border-color);
     color: #6a6a6a;
     font-size: 0.9em;
-    width: 100%; /* Ensure footer takes full width within widget */
+    width: 100%;
 }
 
 .widget-footer a {
@@ -150,22 +142,29 @@ canvas {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     main {
-        padding: 15px; /* Slightly less padding on smaller screens */
+        padding: 10px; /* Adjust padding for tablets */
     }
     .app-title {
-        font-size: 1.8em; /* Smaller title on tablets */
+        font-size: 1.8em;
     }
     .main-widget {
-        padding: 15px; /* Slightly less padding inside the widget */
+        padding: 15px;
+        max-height: calc(100vh - 20px); /* Adjust max-height for tablet padding */
     }
 }
 
 @media (max-width: 480px) {
+    main {
+        padding: 5px; /* Keep 5px padding for mobile */
+    }
     .app-title {
-        font-size: 1.5em; /* Even smaller title on mobile */
+        font-size: 1.5em;
     }
     button {
         padding: 10px 15px;
         font-size: 14px;
+    }
+    .main-widget {
+        max-height: calc(100vh - 10px); /* Adjust max-height for mobile padding */
     }
 }
