@@ -13,13 +13,11 @@ document.addEventListener('DOMContentLoaded', () => {
         photoFile = event.target.files[0];
         if (photoFile) {
             originalPhotoName = photoFile.name.split('.').slice(0, -1).join('.'); // Get name without extension
-            // Optional: Display a preview of the photo
         }
     });
 
     signatureUpload.addEventListener('change', (event) => {
         signatureFile = event.target.files[0];
-        // Optional: Display a preview of the signature
     });
 
     processAndDownloadBtn.addEventListener('click', async () => {
@@ -46,31 +44,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const photoImg = await loadImage(photoFile);
             const signatureImg = await loadImage(signatureFile);
 
-            // Set canvas dimensions to match the photo
-            imageCanvas.width = photoImg.width;
-            imageCanvas.height = photoImg.height;
+            // ************ CANVAS DIMENSIONS & SIGNATURE POSITIONING CHANGES START ************
 
-            // Draw photo
-            ctx.drawImage(photoImg, 0, 0);
-
-            // ************ SIGNATURE POSITIONING LOGIC CHANGES START ************
             // Signature ki desired width, jo photo ki width ke barabar hogi
             const desiredSignatureWidth = photoImg.width;
 
             // Signature ka aspect ratio maintain karte hue uski height calculate karein
-            // signatureImg.naturalWidth aur signatureImg.naturalHeight original dimensions dete hain
             const signatureAspectRatio = signatureImg.naturalWidth / signatureImg.naturalHeight;
             const calculatedSignatureHeight = desiredSignatureWidth / signatureAspectRatio;
 
-            // Signature ko photo ke bottom par align karein
+            // Nayi canvas ki height = Photo ki height + Signature ki height
+            const newCanvasHeight = photoImg.height + calculatedSignatureHeight;
+
+            // Canvas dimensions ko update karein
+            imageCanvas.width = photoImg.width;
+            imageCanvas.height = newCanvasHeight;
+
+            // Context ko clear karein (agar pehle koi drawing thi)
+            ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
+
+
+            // Photo ko canvas ke top par draw karein
+            ctx.drawImage(photoImg, 0, 0);
+
+            // Signature ko photo ke theek neeche draw karein
             // X-coordinate hamesha 0 hoga kyunki yeh photo ki poori width lega
             const signatureX = 0;
-            // Y-coordinate bottom se calculate karein, jisse signature photo ke neeche fit ho
-            const signatureY = photoImg.height - calculatedSignatureHeight;
+            // Y-coordinate photo ki height ke theek baad se shuru hoga
+            const signatureY = photoImg.height;
 
-            // Draw signature on the canvas with calculated dimensions and position
             ctx.drawImage(signatureImg, signatureX, signatureY, desiredSignatureWidth, calculatedSignatureHeight);
-            // ************ SIGNATURE POSITIONING LOGIC CHANGES END ************
+
+            // ************ CANVAS DIMENSIONS & SIGNATURE POSITIONING CHANGES END ************
+
 
             // Generate new file name
             const newFileName = `${originalPhotoName}vacancyhai-online.jpg`;
