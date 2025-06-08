@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoFileNameDisplay = document.getElementById('photoFileName');
     const signatureFileNameDisplay = document.getElementById('signatureFileName');
     const processAndDownloadBtn = document.getElementById('processAndDownload');
-    const imageCanvas = document.getElementById('imageCanvas');
+    const imageCanvas = document.getElementById('imageCanvas'); // Canvas still exists in JS
     const ctx = imageCanvas.getContext('2d');
 
     let photoFile = null;
@@ -12,8 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let originalPhotoName = '';
 
     // Define border and separator properties
-    const borderWidth = 3; // 3px black border (UPDATED)
-    const borderColor = '#000'; // Black border color (UPDATED)
+    const borderWidth = 3; // 3px black border
+    const borderColor = '#000'; // Black border color
     const separatorHeight = 2; // 2px separator line thickness
     const separatorColor = '#ccc'; // Light gray separator color
 
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             originalPhotoName = photoFile.name.split('.').slice(0, -1).join('.');
             updateFileNameDisplay(photoUpload, photoFileNameDisplay, 'passport_photo.jpg');
         } else {
-            photoFileNameDisplay.textContent = 'passport_photo.jpg'; // Reset if no file chosen
+            photoFileNameDisplay.textContent = 'passport_photo.jpg';
         }
     });
 
@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (signatureFile) {
             updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, '2025-06-05_10-48.png');
         } else {
-            signatureFileNameDisplay.textContent = '2025-06-05_10-48.png'; // Reset if no file chosen
+            signatureFileNameDisplay.textContent = '2025-06-05_10-48.png';
         }
     });
 
@@ -93,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
 
             // 1. Draw the main outer black border around the entire combined image
-            ctx.strokeStyle = borderColor; // Black color
-            ctx.lineWidth = borderWidth; // 3px width
+            ctx.strokeStyle = borderColor;
+            ctx.lineWidth = borderWidth;
             ctx.strokeRect(0, 0, newCanvasWidth, newCanvasHeight);
 
             // 2. Draw the photo image (inside the border)
