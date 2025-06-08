@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Signature Adder</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Photo Signature Adder</h1>
+    </header>
+    <main>
+        <div class="upload-section">
+            <label for="photoUpload">Upload Photo:</label>
+            <input type="file" id="photoUpload" accept="image/*">
+
+            <label for="signatureUpload">Upload Signature:</label>
+            <input type="file" id="signatureUpload" accept="image/*">
+
+            <button id="processAndDownload">Add Signature & Download</button>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="imageCanvas"></canvas>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 Your App</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
