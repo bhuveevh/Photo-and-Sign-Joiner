@@ -5,9 +5,9 @@
     --text-color: #1d1d1f; /* Dark text */
     --accent-color: #007aff; /* Blue */
     --border-color: #d2d2d7; /* Light border for widgets */
-    --canvas-border-color: #333; /* Darker border for the final image on canvas */
+    --canvas-border-color: #000; /* Black border for the final image (NEW) */
     --separator-color: #ccc; /* Lighter color for the separator line on canvas */
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --file-name-color: #555; /* Color for file name display */
 }
 
 body {
@@ -20,8 +20,6 @@ body {
     flex-direction: column;
     min-height: 100vh;
 }
-
-/* Header is completely removed */
 
 main {
     flex-grow: 1; /* Allows main content to take up available space */
@@ -55,11 +53,19 @@ main {
     font-weight: 600; /* Slightly bolder */
 }
 
+.file-input-group {
+    display: flex;
+    flex-direction: column; /* Stack label, input, and file name vertically */
+    align-items: flex-start; /* Align contents to the left within the group */
+    gap: 5px; /* Space between elements in the group */
+    width: 100%;
+}
+
 label {
     font-weight: 600;
-    margin-top: 5px; /* Add some space above labels */
-    text-align: left; /* Align label text to left for better readability */
-    width: 100%; /* Make label take full width */
+    /* Removed margin-top as gap handles spacing now */
+    text-align: left;
+    width: 100%;
 }
 
 input[type="file"] {
@@ -70,6 +76,16 @@ input[type="file"] {
     width: calc(100% - 22px); /* Adjust width for padding (10px each side) and border (1px each side) */
     box-sizing: border-box; /* Include padding and border in the element's total width and height calculation */
 }
+
+.file-name-display {
+    font-size: 0.9em;
+    color: var(--file-name-color);
+    text-align: left;
+    width: 100%;
+    /* Add some padding/margin to distinguish it from the input */
+    padding: 5px 0;
+}
+
 
 button {
     background-color: var(--accent-color);
@@ -109,22 +125,24 @@ canvas {
     /* Canvas will have its own border drawn by JavaScript, so no CSS border here */
 }
 
-footer {
+/* New styles for the footer when inside the widget */
+.widget-footer {
     text-align: center;
-    padding: 15px 20px;
-    border-top: 1px solid var(--border-color);
+    padding-top: 15px; /* Add padding above the footer text */
+    margin-top: 15px; /* Space between button and footer */
+    border-top: 1px solid var(--border-color); /* Separator for footer inside widget */
     color: #6a6a6a;
     font-size: 0.9em;
-    margin-top: auto; /* Pushes the footer to the bottom */
+    width: 100%; /* Ensure footer takes full width within widget */
 }
 
-footer a {
+.widget-footer a {
     color: var(--accent-color);
     text-decoration: none;
     font-weight: 500;
 }
 
-footer a:hover {
+.widget-footer a:hover {
     text-decoration: underline;
 }
 
