@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const photoUpload = document.getElementById('photoUpload');
     const signatureUpload = document.getElementById('signatureUpload');
+    const photoFileNameDisplay = document.getElementById('photoFileName'); // Get span for photo file name
+    const signatureFileNameDisplay = document.getElementById('signatureFileName'); // Get span for signature file name
     const processAndDownloadBtn = document.getElementById('processAndDownload');
     const imageCanvas = document.getElementById('imageCanvas');
     const ctx = imageCanvas.getContext('2d');
@@ -10,22 +12,55 @@ document.addEventListener('DOMContentLoaded', () => {
     let originalPhotoName = '';
 
     // Define border and separator properties
-    const borderWidth = 2; // 2px border for the final output image
-    const borderColor = '#333'; // Dark border color (e.g., almost black)
+    const borderWidth = 3; // 3px black border (UPDATED)
+    const borderColor = '#000'; // Black border color (UPDATED)
     const separatorHeight = 2; // 2px separator line thickness
     const separatorColor = '#ccc'; // Light gray separator color
 
+    // Function to update file name display
+    const updateFileNameDisplay = (inputElement, displayElement, defaultText) => {
+        if (inputElement.files && inputElement.files.length > 0) {
+            displayElement.textContent = inputElement.files[0].name;
+        } else {
+            displayElement.textContent = defaultText;
+        }
+    };
+
+    // Event listener for photo upload
     photoUpload.addEventListener('change', (event) => {
         photoFile = event.target.files[0];
         if (photoFile) {
-            // Get original photo name without extension for renaming
             originalPhotoName = photoFile.name.split('.').slice(0, -1).join('.');
+            updateFileNameDisplay(photoUpload, photoFileNameDisplay, 'passport_photo.jpg'); // Update display
+        } else {
+            photoFileNameDisplay.textContent = 'passport_photo.jpg'; // Reset if no file chosen
         }
     });
 
+    // Event listener for signature upload
     signatureUpload.addEventListener('change', (event) => {
         signatureFile = event.target.files[0];
+        if (signatureFile) {
+            updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, '2025-06-05_10-48.png'); // Update display
+        } else {
+            signatureFileNameDisplay.textContent = '2025-06-05_10-48.png'; // Reset if no file chosen
+        }
     });
+
+    // Helper function to load an image asynchronously
+    const loadImage = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    };
 
     processAndDownloadBtn.addEventListener('click', async () => {
         if (!photoFile || !signatureFile) {
@@ -33,23 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // Helper function to load an image asynchronously
-        const loadImage = (file) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => resolve(img);
-                    img.onerror = reject;
-                    img.src = e.target.result;
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-        };
-
         try {
-            // Load both photo and signature images
             const photoImg = await loadImage(photoFile);
             const signatureImg = await loadImage(signatureFile);
 
@@ -59,9 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const calculatedSignatureHeight = desiredSignatureWidth / signatureAspectRatio;
 
             // Calculate overall canvas dimensions including borders and separator
-            // New canvas width: photo width + left border + right border
+            // Canvas width: photo width + left border + right border
             const newCanvasWidth = photoImg.width + (2 * borderWidth);
-            // New canvas height: top border + photo height + separator height + signature height + bottom border
+            // Canvas height: top border + photo height + separator height + signature height + bottom border
             const newCanvasHeight = borderWidth + photoImg.height + separatorHeight + calculatedSignatureHeight + borderWidth;
 
 
@@ -72,12 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Clear canvas before drawing
             ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
 
-            // 1. Draw the main outer border around the entire combined image
-            ctx.strokeStyle = borderColor;
-            ctx.lineWidth = borderWidth;
-            // The strokeRect draws the border *around* the specified rectangle.
-            // So, to draw a border covering the full canvas, we use the canvas dimensions.
-            ctx.strokeRect(0, 0, newCanvasWidth, newCanvasHeight);
+            // 1. Draw the main outer black border around the entire combined image
+            ctx.strokeStyle = borderColor; // Set border color to black
+            ctx.lineWidth = borderWidth; // Set border width to 3px
+            ctx.strokeRect(0, 0, newCanvasWidth, newCanvasHeight); // Draw the border
 
             // 2. Draw the photo image
             // Photo is drawn *inside* the outer border.
@@ -86,22 +103,18 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.drawImage(photoImg, borderWidth, borderWidth);
 
             // 3. Draw the separator line between the photo and signature
-            ctx.beginPath(); // Start a new path for the line
+            ctx.beginPath();
             ctx.strokeStyle = separatorColor;
-            ctx.lineWidth = separatorHeight; // Line thickness
+            ctx.lineWidth = separatorHeight;
 
             // Calculate the Y-coordinate for the separator line
             // It's after the top border and the photo's height
             const separatorY = borderWidth + photoImg.height;
 
             // Draw the line from left border to right border
-            // X-start: after left border
-            // Y-start: at separatorY
-            // X-end: before right border (newCanvasWidth - borderWidth)
-            // Y-end: at separatorY (horizontal line)
             ctx.moveTo(borderWidth, separatorY);
             ctx.lineTo(newCanvasWidth - borderWidth, separatorY);
-            ctx.stroke(); // Execute the drawing of the line
+            ctx.stroke();
 
             // 4. Draw the signature image
             // Signature is drawn *inside* the outer border, *after* the separator line.
@@ -111,18 +124,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const signatureY = borderWidth + photoImg.height + separatorHeight;
             ctx.drawImage(signatureImg, signatureX, signatureY, desiredSignatureWidth, calculatedSignatureHeight);
 
-
             // Generate new file name: (Original Photo Name) + "vacancyhai-online.jpg"
             const newFileName = `${originalPhotoName}vacancyhai-online.jpg`;
 
             // Download the combined image
-            const dataURL = imageCanvas.toDataURL('image/jpeg', 0.9); // Convert canvas content to JPEG data URL (0.9 is quality)
-            const a = document.createElement('a'); // Create a temporary anchor element
-            a.href = dataURL; // Set its href to the data URL
-            a.download = newFileName; // Set the download filename
-            document.body.appendChild(a); // Append to body (required for Firefox)
-            a.click(); // Programmatically click the anchor to trigger download
-            document.body.removeChild(a); // Remove the temporary anchor
+            const dataURL = imageCanvas.toDataURL('image/jpeg', 0.9);
+            const a = document.createElement('a');
+            a.href = dataURL;
+            a.download = newFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
 
         } catch (error) {
             console.error('Error processing images:', error);
