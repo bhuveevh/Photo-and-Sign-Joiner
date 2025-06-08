@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const photoUpload = document.getElementById('photoUpload');
     const signatureUpload = document.getElementById('signatureUpload');
-    const photoFileNameDisplay = document.getElementById('photoFileName'); // Get span for photo file name
-    const signatureFileNameDisplay = document.getElementById('signatureFileName'); // Get span for signature file name
+    const photoFileNameDisplay = document.getElementById('photoFileName');
+    const signatureFileNameDisplay = document.getElementById('signatureFileName');
     const processAndDownloadBtn = document.getElementById('processAndDownload');
     const imageCanvas = document.getElementById('imageCanvas');
     const ctx = imageCanvas.getContext('2d');
@@ -26,12 +26,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Initialize display with default placeholder texts
+    photoFileNameDisplay.textContent = 'passport_photo.jpg';
+    signatureFileNameDisplay.textContent = '2025-06-05_10-48.png';
+
     // Event listener for photo upload
     photoUpload.addEventListener('change', (event) => {
         photoFile = event.target.files[0];
         if (photoFile) {
             originalPhotoName = photoFile.name.split('.').slice(0, -1).join('.');
-            updateFileNameDisplay(photoUpload, photoFileNameDisplay, 'passport_photo.jpg'); // Update display
+            updateFileNameDisplay(photoUpload, photoFileNameDisplay, 'passport_photo.jpg');
         } else {
             photoFileNameDisplay.textContent = 'passport_photo.jpg'; // Reset if no file chosen
         }
@@ -41,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     signatureUpload.addEventListener('change', (event) => {
         signatureFile = event.target.files[0];
         if (signatureFile) {
-            updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, '2025-06-05_10-48.png'); // Update display
+            updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, '2025-06-05_10-48.png');
         } else {
             signatureFileNameDisplay.textContent = '2025-06-05_10-48.png'; // Reset if no file chosen
         }
@@ -78,11 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const calculatedSignatureHeight = desiredSignatureWidth / signatureAspectRatio;
 
             // Calculate overall canvas dimensions including borders and separator
-            // Canvas width: photo width + left border + right border
             const newCanvasWidth = photoImg.width + (2 * borderWidth);
-            // Canvas height: top border + photo height + separator height + signature height + bottom border
             const newCanvasHeight = borderWidth + photoImg.height + separatorHeight + calculatedSignatureHeight + borderWidth;
-
 
             // Set canvas dimensions
             imageCanvas.width = newCanvasWidth;
@@ -92,39 +93,28 @@ document.addEventListener('DOMContentLoaded', () => {
             ctx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
 
             // 1. Draw the main outer black border around the entire combined image
-            ctx.strokeStyle = borderColor; // Set border color to black
-            ctx.lineWidth = borderWidth; // Set border width to 3px
-            ctx.strokeRect(0, 0, newCanvasWidth, newCanvasHeight); // Draw the border
+            ctx.strokeStyle = borderColor; // Black color
+            ctx.lineWidth = borderWidth; // 3px width
+            ctx.strokeRect(0, 0, newCanvasWidth, newCanvasHeight);
 
-            // 2. Draw the photo image
-            // Photo is drawn *inside* the outer border.
-            // X-coordinate: starts after the left border
-            // Y-coordinate: starts after the top border
+            // 2. Draw the photo image (inside the border)
             ctx.drawImage(photoImg, borderWidth, borderWidth);
 
             // 3. Draw the separator line between the photo and signature
             ctx.beginPath();
             ctx.strokeStyle = separatorColor;
             ctx.lineWidth = separatorHeight;
-
-            // Calculate the Y-coordinate for the separator line
-            // It's after the top border and the photo's height
             const separatorY = borderWidth + photoImg.height;
-
-            // Draw the line from left border to right border
             ctx.moveTo(borderWidth, separatorY);
             ctx.lineTo(newCanvasWidth - borderWidth, separatorY);
             ctx.stroke();
 
-            // 4. Draw the signature image
-            // Signature is drawn *inside* the outer border, *after* the separator line.
-            // X-coordinate: starts after the left border
-            // Y-coordinate: starts after top border + photo height + separator height
+            // 4. Draw the signature image (inside the border, after separator)
             const signatureX = borderWidth;
             const signatureY = borderWidth + photoImg.height + separatorHeight;
             ctx.drawImage(signatureImg, signatureX, signatureY, desiredSignatureWidth, calculatedSignatureHeight);
 
-            // Generate new file name: (Original Photo Name) + "vacancyhai-online.jpg"
+            // Generate new file name
             const newFileName = `${originalPhotoName}vacancyhai-online.jpg`;
 
             // Download the combined image
