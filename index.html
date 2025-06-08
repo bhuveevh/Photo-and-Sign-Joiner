@@ -11,22 +11,29 @@
         <div class="main-widget">
             <h1 class="app-title">Vacancy Hai Photo Signature Adder</h1>
 
-            <label for="photoUpload">Upload Photo:</label>
-            <input type="file" id="photoUpload" accept="image/*">
+            <div class="file-input-group">
+                <label for="photoUpload">Upload Photo:</label>
+                <input type="file" id="photoUpload" accept="image/*">
+                <span id="photoFileName" class="file-name-display">passport_photo.jpg</span>
+            </div>
 
-            <label for="signatureUpload">Upload Signature:</label>
-            <input type="file" id="signatureUpload" accept="image/*">
+            <div class="file-input-group">
+                <label for="signatureUpload">Upload Signature:</label>
+                <input type="file" id="signatureUpload" accept="image/*">
+                <span id="signatureFileName" class="file-name-display">2025-06-05_10-48.png</span>
+            </div>
 
             <button id="processAndDownload">Add Signature & Download</button>
+
+            <footer class="widget-footer">
+                <p>Developed by <a href="https://vacancyhai.online/" target="_blank" rel="noopener noreferrer">VACANCYHAI.ONLINE</a> | Inspired by USERS</p>
+            </footer>
         </div>
 
         <div class="canvas-container">
             <canvas id="imageCanvas"></canvas>
         </div>
     </main>
-    <footer>
-        <p>Developed by <a href="https://vacancyhai.online/" target="_blank" rel="noopener noreferrer">VACANCYHAI.ONLINE</a> | Inspired by USERS</p>
-    </footer>
     <script src="script.js"></script>
 </body>
 </html>
