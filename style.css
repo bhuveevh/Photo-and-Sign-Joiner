@@ -4,7 +4,9 @@
     --secondary-bg: #ffffff; /* White */
     --text-color: #1d1d1f; /* Dark text */
     --accent-color: #007aff; /* Blue */
-    --border-color: #d2d2d7; /* Light border */
+    --border-color: #d2d2d7; /* Light border for widgets */
+    --canvas-border-color: #333; /* Darker border for the final image on canvas */
+    --separator-color: #ccc; /* Lighter color for the separator line on canvas */
     --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
@@ -19,38 +21,45 @@ body {
     min-height: 100vh;
 }
 
-header {
-    background-color: var(--secondary-bg);
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    text-align: center;
-}
+/* Header is completely removed */
 
 main {
-    flex-grow: 1;
+    flex-grow: 1; /* Allows main content to take up available space */
     padding: 20px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+    align-items: center; /* Center items horizontally */
+    gap: 20px; /* Space between the main widget and the canvas container */
 }
 
-.upload-section {
+/* Styles for the main widget containing all controls */
+.main-widget {
     background-color: var(--secondary-bg);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 15px; /* Space between input fields and buttons */
     width: 100%;
-    max-width: 500px;
+    max-width: 500px; /* Max width for the widget */
+    text-align: center; /* Center the title and elements within the widget */
+}
+
+/* Style for the app title inside the widget */
+.app-title {
+    font-size: 2.2em; /* Larger, prominent title */
+    color: var(--text-color);
+    margin-bottom: 15px; /* Space below the title */
+    padding: 0; /* Remove any default padding that might affect alignment */
+    font-weight: 600; /* Slightly bolder */
 }
 
 label {
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-top: 5px; /* Add some space above labels */
+    text-align: left; /* Align label text to left for better readability */
+    width: 100%; /* Make label take full width */
 }
 
 input[type="file"] {
@@ -58,6 +67,8 @@ input[type="file"] {
     border: 1px solid var(--border-color);
     border-radius: 5px;
     background-color: #fcfcfc;
+    width: calc(100% - 22px); /* Adjust width for padding (10px each side) and border (1px each side) */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height calculation */
 }
 
 button {
@@ -70,30 +81,32 @@ button {
     font-size: 16px;
     font-weight: 500;
     transition: background-color 0.2s ease-in-out;
+    width: 100%; /* Make button take full width of the widget */
 }
 
 button:hover {
-    background-color: #005bb5; /* Darker blue */
+    background-color: #005bb5; /* Darker blue on hover */
 }
 
 .canvas-container {
-    background-color: var(--secondary-bg);
-    border: 1px solid var(--border-color);
+    background-color: var(--secondary-bg); /* White background for the container itself */
+    border: 1px solid var(--border-color); /* Light border for the container */
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden; /* To handle larger images gracefully */
+    overflow: hidden; /* To handle larger images gracefully without container scrollbars */
     width: 100%;
-    max-width: 800px; /* Adjust as needed */
+    max-width: 800px; /* Max width for the canvas display area */
 }
 
 canvas {
-    max-width: 100%;
-    height: auto;
-    display: block; /* Remove extra space below canvas */
+    max-width: 100%; /* Ensure canvas scales down if larger than its container */
+    height: auto; /* Maintain aspect ratio when scaling down */
+    display: block; /* Removes any extra space below the canvas element */
+    /* Canvas will have its own border drawn by JavaScript, so no CSS border here */
 }
 
 footer {
@@ -102,21 +115,36 @@ footer {
     border-top: 1px solid var(--border-color);
     color: #6a6a6a;
     font-size: 0.9em;
+    margin-top: auto; /* Pushes the footer to the bottom */
 }
+
+footer a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
     main {
-        padding: 15px;
+        padding: 15px; /* Slightly less padding on smaller screens */
     }
-    .upload-section {
-        padding: 15px;
+    .app-title {
+        font-size: 1.8em; /* Smaller title on tablets */
+    }
+    .main-widget {
+        padding: 15px; /* Slightly less padding inside the widget */
     }
 }
 
 @media (max-width: 480px) {
-    header h1 {
-        font-size: 1.5em;
+    .app-title {
+        font-size: 1.5em; /* Even smaller title on mobile */
     }
     button {
         padding: 10px 15px;
