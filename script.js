@@ -45,9 +45,9 @@ document.addEventListener('DOMContentLoaded', () => {
     signatureUpload.addEventListener('change', (event) => {
         signatureFile = event.target.files[0];
         if (signatureFile) {
-            updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, '2025-06-05_10-48.png');
+            updateFileNameDisplay(signatureUpload, signatureFileNameDisplay, 'signature_photo.png');
         } else {
-            signatureFileNameDisplay.textContent = '2025-06-05_10-48.png';
+            signatureFileNameDisplay.textContent = 'signature_photo.png';
         }
     });
 
