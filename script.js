@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize display with default placeholder texts
     photoFileNameDisplay.textContent = 'passport_photo.jpg';
-    signatureFileNameDisplay.textContent = '2025-06-05_10-48.png';
+    signatureFileNameDisplay.textContent = 'signature_photo.png';
 
     // Event listener for photo upload
     photoUpload.addEventListener('change', (event) => {
