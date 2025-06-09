@@ -14,7 +14,7 @@
 body {
     font-family: var(--font-family); /* Applied new font */
     margin: 0;
-    padding: 2px;
+    padding: 10px;
     background-color: var(--primary-bg);
     color: var(--text-color);
     display: flex;
